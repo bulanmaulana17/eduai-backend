@@ -5,18 +5,16 @@ const cors = require('cors');
 
 // Inisialisasi aplikasi express
 const app = express();
-const port = 3000; // Server akan berjalan di port 3000
 
 // Middleware untuk membaca JSON dari request body dan mengaktifkan CORS
 app.use(express.json());
 app.use(cors());
 
 // Inisialisasi Midtrans Snap API
-// Ganti 'YOUR_SERVER_KEY' dengan Server Key asli dari dashboard Midtrans
 let snap = new midtransClient.Snap({
     isProduction: process.env.NODE_ENV === 'production',
-    serverKey: process.env.MIDTRANS_SERVER_KEY, // Mengambil dari environment variable
-    clientKey: process.env.MIDTRANS_CLIENT_KEY  // Mengambil dari environment variable
+    serverKey: process.env.MIDTRANS_SERVER_KEY,
+    clientKey: process.env.MIDTRANS_CLIENT_KEY
 });
 
 // Buat endpoint untuk membuat token transaksi
@@ -43,18 +41,11 @@ app.post('/create-transaction', async (req, res) => {
             "customer_details": {
                 "first_name": userDetails.name,
                 "email": userDetails.email,
-                "phone": userDetails.phone || '08123456789' // Sediakan nomor default jika tidak ada
+                "phone": userDetails.phone || '08123456789'
             }
         };
 
-        console.log("Membuat transaksi untuk:", parameter);
-
-        // Panggil Midtrans API untuk mendapatkan token
         const transactionToken = await snap.createTransactionToken(parameter);
-
-        console.log("Token berhasil dibuat:", transactionToken);
-
-        // Kirim token kembali ke frontend
         res.json({ transactionToken });
 
     } catch (error) {
@@ -63,8 +54,5 @@ app.post('/create-transaction', async (req, res) => {
     }
 });
 
-// Jalankan server
-app.listen(port, () => {
-    console.log(`Backend server berjalan di http://localhost:${port}`);
-});
+// Pastikan baris ini ada di paling bawah dan tidak di dalam blok lain
 module.exports = app;
