@@ -66,5 +66,5 @@ app.post('/create-transaction', async (req, res) => {
 // Jalankan server
 app.listen(port, () => {
     console.log(`Backend server berjalan di http://localhost:${port}`);
-module.exports = app;
 });
+module.exports = app;
